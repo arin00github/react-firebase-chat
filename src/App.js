@@ -6,6 +6,7 @@ import RegisterPage from './components/RegisterPage';
 import { useEffect } from 'react';
 import firebase from './firebase';
 import { useDispatch } from 'react-redux';
+import { setUser } from './redux/actions/user_action';
 
 function App(props) {
 
@@ -20,6 +21,7 @@ function App(props) {
       if(user){
         //로그인이 된 상태
         history.push("/")
+        dispatch(setUser(user))
       } else {
         //로그인이 되지 않은 상태
         history.push("/login")
