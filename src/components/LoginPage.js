@@ -74,7 +74,7 @@ export default function LoginPage(){
             
             </form>
             <div className="mt-4">
-            <Link to="/">회원가입하기</Link>
+            <Link to="/register">회원가입하기</Link>
             </div>
             
             </div>

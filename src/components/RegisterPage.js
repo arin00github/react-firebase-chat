@@ -23,7 +23,7 @@ export default function RegisterPage(){
             //유저 정보를 추가 및 업데이트
             await createUser.user.updateProfile({
                 displayName: data.name,
-                photoURL: `http//:gravatar.com/avatar/${md5(createUser.user.email)}?d=identicon`
+                photoURL: `http://gravatar.com/avatar/${md5(createUser.user.email)}?d=identicon`
             })
             console.log('createUser', createUser);
             //정보를 데이터베이스에 저장

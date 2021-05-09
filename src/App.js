@@ -1,12 +1,12 @@
 import { Route,  Switch, useHistory } from 'react-router';
 import './assets/style.css';
 import LoginPage from './components/LoginPage';
-import ChatPage from './components/ChatPage';
+import ChatPage from './components/ChatPage/ChatPage';
 import RegisterPage from './components/RegisterPage';
 import { useEffect } from 'react';
 import firebase from './firebase';
 import { useDispatch } from 'react-redux';
-import { setUser } from './redux/actions/user_action';
+import { setUser, clearUser } from './redux/actions/user_action';
 
 function App(props) {
 
@@ -25,10 +25,11 @@ function App(props) {
       } else {
         //로그인이 되지 않은 상태
         history.push("/login")
+        dispatch(clearUser())
       }
 
     })
-  },[history])
+  },[dispatch, history])
 
 
   return (
