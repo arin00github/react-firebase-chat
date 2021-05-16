@@ -3,6 +3,7 @@ import { Component } from "react";
 import { FaRegSmileWink, FaPlus } from 'react-icons/fa';
 import { connect } from 'react-redux';
 import firebase from '../../../firebase';
+import { setCurrentChatRoom } from "../../../redux/actions/chatRoom_action";
 
 class ChatRooms extends Component {
     
@@ -12,7 +13,10 @@ class ChatRooms extends Component {
         description: "",
         chatRoomsRef: firebase.database().ref('chatRooms'),
         chatRooms: [],
+        firstLoad: true,
+        activeRoomId : '',
     }
+
 
     handleClose = () => this.setState({ show: false})
     handleOpen = () => this.setState({ show : true})
@@ -45,13 +49,6 @@ class ChatRooms extends Component {
 
         //ChatRoom 테이블 생성 및 업데이트
         try{
-            // await firebase.database().ref('chatRooms').child(key).update(newChatRoom, (err) => {
-            //     if(err){
-            //         console.log(err)
-            //     }else{
-            //         console.log("Data save successfully!")
-            //     }
-            //});
             await this.state.chatRoomsRef.child(key).set(newChatRoom, (err)=> {
                 if(err){
                     console.log(err);
@@ -72,33 +69,65 @@ class ChatRooms extends Component {
 
     isFormValid = (name, description) => name && description;
 
-    componentDidMount(){
-        this.AddChatRoomsListener();
+    
+
+    setFirstChatRoom = () => {
+        if(this.state.firstLoad && this.state.chatRooms.length > 0){
+            const firstRoom = this.state.chatRooms[0]
+            console.log(firstRoom);
+            this.props.dispatch(setCurrentChatRoom(firstRoom));
+            this.setState({activeRoomId: firstRoom.id})
+        }
+        this.setState({firstLoad: false})
+        
     }
 
     AddChatRoomsListener = () => {
         let roomArray = [];
         this.state.chatRoomsRef.on("child_added", DataSnapshot => {
             roomArray.push(DataSnapshot.val());
-            console.log(roomArray);
-            this.setState({chatRooms: roomArray})
+            //console.log(roomArray);
+            this.setState({chatRooms: roomArray}, () => this.setFirstChatRoom())
     })}
+
+
+    changeChatRoom = (room) => {
+        console.log(room);
+        this.props.dispatch(setCurrentChatRoom(room))
+        this.setState({activeRoomId: room.id})
+        
+    }
+    //현재 작동이 안됨
     renderChatRooms = (chatRooms) => {
+        //console.log(chatRooms)
         if(chatRooms.length > 0){
-            return(
-                <>
-                
-                </>
-            )
+            chatRooms.map(room => {
+                return (
+                    <li key={room.id} 
+                        style= {{backgroundColor: room.id === this.state.activeRoomId && "#ffff45"}}
+                        onClick={() => this.changeChatRoom(room)}
+                        >
+                        #{room.name}
+                    </li>
+                )
+            })
         }
     }
+    componentDidMount(){
+        this.AddChatRoomsListener();
+    }
        
+    componentWillUnmount(){
+        this.state.chatRoomsRef.off();
+    }
 
 
     
 
     
     render(){
+        //console.log('active room', this.state.activeRoomId)
+        const { chatRooms } = this.state
         return(
             <div>
                 <div style={{
@@ -115,9 +144,12 @@ class ChatRooms extends Component {
                     
                 </div>
                 <ul style={{padding: 0, listStyle: "none"}}>
-                    {this.state.chatRooms.length > 0 && this.state.chatRooms.map((room)=> (
-                    <li onClick={() => console.log(room)}># {room.name}</li>
-                ))}
+                    {this.renderChatRooms(chatRooms)} {/*작동이 안되고 있다. 왜??? */}
+                    {chatRooms.length > 0 && chatRooms.map((room) => (
+                        <li key={room.id} onClick={() => this.changeChatRoom(room)}
+                        style= {{backgroundColor: room.id === this.state.activeRoomId && "#273bad"}}
+                        >{room.name}</li>
+                    ))}
                 </ul>
                 {/** ADD CHAT ROOM MODAL */}
                 <Modal show={this.state.show} onHide={this.handleClose} 

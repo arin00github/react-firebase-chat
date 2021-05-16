@@ -12,7 +12,7 @@ export default function UserPanel (){
     const user = useSelector(state => state.user.currentUser)
     const dispatch = useDispatch();
 
-    console.log('UserPanel', user);
+    //console.log('UserPanel', user);
 
     const inputOpenImageRef = useRef();
 
@@ -37,7 +37,7 @@ export default function UserPanel (){
 
            let downloadURL = await uploadTaskSnapshot.ref.getDownloadURL()
 
-           console.log('downloadURL', downloadURL);
+           //console.log('downloadURL', downloadURL);
            //프로필 이미지 수정
            await firebase.auth().currentUser.updateProfile({
                photoURL: downloadURL
