@@ -33,7 +33,7 @@ export default function MessageForm (){
         } else {
             message["content"] = content
         }
-        console.log(message);
+        //console.log(message);
         return message;
     }
 

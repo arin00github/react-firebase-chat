@@ -1,11 +1,12 @@
 import { Button, Form, Modal } from "react-bootstrap";
 import { Component } from "react";
 import { FaRegSmileWink, FaPlus } from 'react-icons/fa';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import firebase from '../../../firebase';
 import { setCurrentChatRoom } from "../../../redux/actions/chatRoom_action";
 
 class ChatRooms extends Component {
+    
     
     state = {
         show: false,
@@ -16,6 +17,7 @@ class ChatRooms extends Component {
         firstLoad: true,
         activeRoomId : '',
     }
+    
 
 
     handleClose = () => this.setState({ show: false})
@@ -115,6 +117,9 @@ class ChatRooms extends Component {
     }
     componentDidMount(){
         this.AddChatRoomsListener();
+        
+        
+
     }
        
     componentWillUnmount(){
@@ -127,7 +132,9 @@ class ChatRooms extends Component {
     
     render(){
         //console.log('active room', this.state.activeRoomId)
+        const { roomArray } = this.props
         const { chatRooms } = this.state
+        console.log(this.props);
         return(
             <div>
                 <div style={{
@@ -144,7 +151,7 @@ class ChatRooms extends Component {
                     
                 </div>
                 <ul style={{padding: 0, listStyle: "none"}}>
-                    {this.renderChatRooms(chatRooms)} {/*작동이 안되고 있다. 왜??? */}
+                    {/*this.renderChatRooms(chatRooms)*/} {/*작동이 안되고 있다. 왜??? */}
                     {chatRooms.length > 0 && chatRooms.map((room) => (
                         <li key={room.id} onClick={() => this.changeChatRoom(room)}
                         style= {{backgroundColor: room.id === this.state.activeRoomId && "#273bad"}}
@@ -190,7 +197,8 @@ class ChatRooms extends Component {
 }
 const mapStateToProps = state => {
     return {
-        user: state.user.currentUser
+        user: state.user.currentUser,
+        thisRoom: state.chatting.currentRoom
     }
 }
 
