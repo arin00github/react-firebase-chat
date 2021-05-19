@@ -5,7 +5,7 @@ import {AiOutlineSearch} from 'react-icons/ai'
 
 
 
-export default function MessageHeader (){
+export default function MessageHeader ({handleSearchChange}){
     return (
         <div style={{
             width: '100%',
@@ -25,6 +25,7 @@ export default function MessageHeader (){
                     <InputGroup className="md-3">
                         <InputGroup.Text><AiOutlineSearch/></InputGroup.Text>
                         <FormControl
+                            onChange={handleSearchChange}
                             placeholder="chatroomname"
                         />
                     </InputGroup>

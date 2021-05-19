@@ -76,7 +76,7 @@ export default function MessageForm (){
         if(!file) return ;
         const filePath = `message/public/${file.name}.jpg`;
         const metedata = { contentType: mime.lookup(file.name)}
-
+        setLoading(true)
        try{
         //파일을 스토리지에 저장
         let uploadTask = storageRef.child(filePath).put(file, metedata);
@@ -85,14 +85,28 @@ export default function MessageForm (){
             const value = Math.round(
                 UploadTaskSnapShot.bytesTransferred / UploadTaskSnapShot.totalBytes * 100)
                 setPercentage(value)
-            
+                setLoading(false)
+        },
+        err => {
+            console.log(err);
+            setLoading(false);
+        }, ()=> {
+            //저장이 다 된 후 에 파잉ㄹ 메시지 정송(데이터 베이스에 저장)
+            //저장된 파일을 다운 로드 받으 수 있는 URL 가져오기
+            uploadTask.snapshot.ref.getDownloadURL()
+            .then(downloadURL => {
+                console.log( 'download',downloadURL);
+                messagesRef.child(thisRoom.id).push().set(createMessage())
+            })
         })
        }catch(err){
+           
            console.log(err)
        }
     }
     console.log('upload_percentage', percentage)
 
+    
     
 
     
@@ -115,11 +129,11 @@ export default function MessageForm (){
             <Row>
                 <Col> <button type="submit" className="btn btn-primary" style={{width:"100%"}}>SEND</button>
                 </Col>
-                <Col> <Button onClick={handleOpenImage} style={{width:"100%"}}>UPLOAD</Button>
+                <Col> <Button disabled={loading ? true : false} onClick={handleOpenImage} style={{width:"100%"}}>UPLOAD</Button>
                 </Col>
             </Row>
             </Form>
-            <input style={{display: 'none'}} onChange={handleUploadImage} ref={inputOpenImageRef} type="file" />
+            <input accept="image/jpeg, image/png" style={{display: 'none'}} disabled={loading ? true : false} onChange={handleUploadImage} ref={inputOpenImageRef} type="file" />
         </div>
     )
 }
