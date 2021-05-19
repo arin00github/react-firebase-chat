@@ -72,18 +72,19 @@ class ChatRooms extends Component {
     isFormValid = (name, description) => name && description;
 
     
-
+    //첫 화면시 default chatRoom 을 선택 설정
     setFirstChatRoom = () => {
         if(this.state.firstLoad && this.state.chatRooms.length > 0){
             const firstRoom = this.state.chatRooms[0]
-            console.log(firstRoom);
+            //console.log(firstRoom);
+            console.log("1.default chatRoom 선택")
             this.props.dispatch(setCurrentChatRoom(firstRoom));
             this.setState({activeRoomId: firstRoom.id})
         }
         this.setState({firstLoad: false})
         
     }
-
+    //데이터베이스에 있는 chatRoom을 불러오기
     AddChatRoomsListener = () => {
         let roomArray = [];
         this.state.chatRoomsRef.on("child_added", DataSnapshot => {
@@ -94,7 +95,7 @@ class ChatRooms extends Component {
 
 
     changeChatRoom = (room) => {
-        console.log(room);
+        //console.log(room);
         this.props.dispatch(setCurrentChatRoom(room))
         this.setState({activeRoomId: room.id})
         
@@ -134,7 +135,7 @@ class ChatRooms extends Component {
         //console.log('active room', this.state.activeRoomId)
         const { roomArray } = this.props
         const { chatRooms } = this.state
-        console.log(this.props);
+        //dconsole.log(this.props);
         return(
             <div>
                 <div style={{

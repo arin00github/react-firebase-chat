@@ -7,7 +7,7 @@ const initialRoomState = {
 
 
 export default function chatRoomReducer (state = initialRoomState, action){
-    console.log('reducer_step', action.payload);
+    //console.log('reducer_step', action.payload);
     switch(action.type){
         case SET_CURRENT_CHATROOM:
             return {
